@@ -14,9 +14,7 @@ import {
 
 import { AuthContext } from '../contexts/AuthContext';
 
-export default function LoginScreen({
-  navigation,
-}) {
+export default function LoginScreen() {
   const { signIn } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
@@ -34,8 +32,6 @@ export default function LoginScreen({
         'Sucesso',
         'Login realizado!'
       );
-
-      navigation.navigate('Home');
     } else {
       Alert.alert(
         'Erro',
@@ -82,6 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: '#F4F6FB',
   },
 
   title: {
@@ -89,21 +86,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
+    color: '#111',
   },
 
   input: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 10,
+    borderRadius: 12,
     padding: 15,
     marginBottom: 20,
+    fontSize: 16,
   },
 
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#6C63FF',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: 'center',
   },
 

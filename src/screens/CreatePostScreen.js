@@ -13,27 +13,37 @@ import api from '../services/api';
 
 export default function CreatePostScreen({ navigation }) {
   const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [content, setContent] = useState('');
 
   async function handleCreatePost() {
     try {
-      await api.post('/posts', {
+      await api.post('/Posts', {
         title,
-        body,
-        userId: 1,
+        content,
       });
 
-      Alert.alert('Sucesso', 'Post criado com sucesso!');
+      Alert.alert(
+        'Sucesso',
+        'Post criado com sucesso!'
+      );
 
       navigation.goBack();
+
     } catch (error) {
-      Alert.alert('Erro', 'Erro ao criar post');
+      console.log(error);
+
+      Alert.alert(
+        'Erro',
+        'Erro ao criar post'
+      );
     }
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Título</Text>
+      <Text style={styles.label}>
+        Título
+      </Text>
 
       <TextInput
         style={styles.input}
@@ -42,12 +52,14 @@ export default function CreatePostScreen({ navigation }) {
         placeholder="Digite o título"
       />
 
-      <Text style={styles.label}>Conteúdo</Text>
+      <Text style={styles.label}>
+        Conteúdo
+      </Text>
 
       <TextInput
         style={[styles.input, styles.textArea]}
-        value={body}
-        onChangeText={setBody}
+        value={content}
+        onChangeText={setContent}
         placeholder="Digite o conteúdo"
         multiline
       />
@@ -68,33 +80,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#F4F6FB',
   },
 
   label: {
     fontSize: 18,
     marginBottom: 10,
     fontWeight: 'bold',
+    color: '#111',
   },
 
   input: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 12,
+    borderRadius: 12,
+    padding: 14,
     marginBottom: 20,
+    fontSize: 16,
   },
 
   textArea: {
-    height: 120,
+    height: 140,
     textAlignVertical: 'top',
   },
 
   button: {
-    backgroundColor: '#007bff',
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: '#6C63FF',
+    padding: 16,
+    borderRadius: 14,
     alignItems: 'center',
+    marginTop: 10,
   },
 
   buttonText: {

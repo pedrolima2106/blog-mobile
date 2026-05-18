@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  RefreshControl,
 } from 'react-native';
 
 import {
@@ -26,18 +27,29 @@ import { AuthContext } from '../contexts/AuthContext';
 export default function HomeScreen({ navigation }) {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState('');
+  const [refreshing, setRefreshing] =
+    useState(false);
 
   const { logout, user } =
     useContext(AuthContext);
 
   async function loadPosts() {
     try {
-      const response = await api.get('/posts');
+      const response = await api.get('/Posts');
 
       setPosts(response.data);
+
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async function onRefresh() {
+    setRefreshing(true);
+
+    await loadPosts();
+
+    setRefreshing(false);
   }
 
   useEffect(() => {
@@ -52,6 +64,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* HEADER */}
       <View style={styles.header}>
         <View>
           <Text style={styles.welcome}>
@@ -75,10 +88,12 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      {/* TÍTULO */}
       <Text style={styles.title}>
         Blog Mobile
       </Text>
 
+      {/* PESQUISA */}
       <View style={styles.searchContainer}>
         <MaterialIcons
           name="search"
@@ -131,6 +146,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      {/* BOTÃO ESTUDANTES */}
       <View style={styles.actionsContainer}>
         <TouchableOpacity
           style={styles.studentButton}
@@ -157,6 +173,14 @@ export default function HomeScreen({ navigation }) {
         keyExtractor={(item) =>
           item.id.toString()
         }
+
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
@@ -183,7 +207,7 @@ export default function HomeScreen({ navigation }) {
               style={styles.postBody}
               numberOfLines={3}
             >
-              {item.body}
+              {item.content}
             </Text>
 
             <View style={styles.cardFooter}>

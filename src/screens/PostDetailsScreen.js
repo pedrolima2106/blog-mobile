@@ -18,7 +18,7 @@ export default function PostDetailsScreen({
       </Text>
 
       <Text style={styles.body}>
-        {post.body}
+        {post.content}
       </Text>
 
       <TouchableOpacity

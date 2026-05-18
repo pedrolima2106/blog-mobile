@@ -18,51 +18,75 @@ export default function EditPostScreen({
   const { post } = route.params;
 
   const [title, setTitle] = useState(post.title);
-  const [body, setBody] = useState(post.body);
+  const [content, setContent] = useState(post.content);
 
   async function handleUpdatePost() {
     try {
-      await api.put(`/posts/${post.id}`, {
+      await api.put(`/Posts/${post.id}`, {
         title,
-        body,
+        content,
       });
 
-      Alert.alert('Sucesso', 'Post atualizado!');
+      Alert.alert(
+        'Sucesso',
+        'Post atualizado!'
+      );
 
       navigation.goBack();
+
     } catch (error) {
-      Alert.alert('Erro', 'Erro ao atualizar');
+      console.log(error);
+
+      Alert.alert(
+        'Erro',
+        'Erro ao atualizar'
+      );
     }
   }
 
   async function handleDeletePost() {
     try {
-      await api.delete(`/posts/${post.id}`);
+      await api.delete(`/Posts/${post.id}`);
 
-      Alert.alert('Sucesso', 'Post deletado!');
+      Alert.alert(
+        'Sucesso',
+        'Post deletado!'
+      );
 
       navigation.navigate('Home');
+
     } catch (error) {
-      Alert.alert('Erro', 'Erro ao deletar');
+      console.log(error);
+
+      Alert.alert(
+        'Erro',
+        'Erro ao deletar'
+      );
     }
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Título</Text>
+      <Text style={styles.label}>
+        Título
+      </Text>
 
       <TextInput
         style={styles.input}
         value={title}
         onChangeText={setTitle}
+        placeholder="Digite o título"
       />
 
-      <Text style={styles.label}>Conteúdo</Text>
+      <Text style={styles.label}>
+        Conteúdo
+      </Text>
 
       <TextInput
         style={[styles.input, styles.textArea]}
-        value={body}
-        onChangeText={setBody}
+        value={content}
+        onChangeText={setContent}
+        placeholder="Digite o conteúdo"
         multiline
       />
 
@@ -91,40 +115,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#F4F6FB',
   },
 
   label: {
     fontSize: 18,
     marginBottom: 10,
     fontWeight: 'bold',
+    color: '#111',
   },
 
   input: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 12,
+    borderRadius: 12,
+    padding: 14,
     marginBottom: 20,
+    fontSize: 16,
   },
 
   textArea: {
-    height: 120,
+    height: 140,
     textAlignVertical: 'top',
   },
 
   editButton: {
-    backgroundColor: '#007bff',
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: '#6C63FF',
+    padding: 16,
+    borderRadius: 14,
     alignItems: 'center',
     marginBottom: 15,
   },
 
   deleteButton: {
-    backgroundColor: '#dc3545',
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: '#FF4D4D',
+    padding: 16,
+    borderRadius: 14,
     alignItems: 'center',
   },
 

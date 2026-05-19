@@ -1,4 +1,4 @@
-import {
+import React, {
   useEffect,
   useState,
 } from 'react';
@@ -14,16 +14,24 @@ import {
 
 import api from '../services/api';
 
-export default function TeachersScreen() {
+export default function TeachersScreen({
+  navigation,
+}) {
   const [teachers, setTeachers] =
     useState([]);
 
   async function loadTeachers() {
     try {
       const response =
-        await api.get('/users');
+        await api.get('/Users');
 
-      setTeachers(response.data);
+      const onlyTeachers =
+        response.data.filter(
+          (user) => user.role === 'Professor'
+        );
+
+      setTeachers(onlyTeachers);
+
     } catch (error) {
       console.log(error);
     }
@@ -31,18 +39,21 @@ export default function TeachersScreen() {
 
   async function deleteTeacher(id) {
     try {
-      await api.delete(`/users/${id}`);
+      await api.delete(`/Users/${id}`);
 
       Alert.alert(
         'Sucesso',
-        'Professor removido'
+        'Professor excluído!'
       );
 
       loadTeachers();
+
     } catch (error) {
+      console.log(error.response?.data);
+
       Alert.alert(
         'Erro',
-        'Erro ao excluir'
+        'Erro ao excluir professor'
       );
     }
   }
@@ -68,18 +79,42 @@ export default function TeachersScreen() {
               {item.name}
             </Text>
 
-            <Text>{item.email}</Text>
+            <Text style={styles.email}>
+              {item.email}
+            </Text>
 
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={() =>
-                deleteTeacher(item.id)
-              }
-            >
-              <Text style={styles.buttonText}>
-                Excluir
-              </Text>
-            </TouchableOpacity>
+            <Text style={styles.role}>
+              {item.role}
+            </Text>
+
+            <View style={styles.buttons}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() =>
+                  navigation.navigate(
+                    'EditUser',
+                    {
+                      user: item,
+                    }
+                  )
+                }
+              >
+                <Text style={styles.buttonText}>
+                  Editar
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() =>
+                  deleteTeacher(item.id)
+                }
+              >
+                <Text style={styles.buttonText}>
+                  Excluir
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       />
@@ -91,6 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#EEF1F7',
   },
 
   title: {
@@ -101,23 +137,49 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor: '#fff',
-    padding: 15,
+    padding: 18,
     marginBottom: 15,
-    borderRadius: 10,
+    borderRadius: 16,
     elevation: 3,
   },
 
   name: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 6,
+  },
+
+  email: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 6,
+  },
+
+  role: {
+    fontSize: 14,
+    color: '#6C63FF',
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  editButton: {
+    backgroundColor: '#6C63FF',
+    padding: 12,
+    borderRadius: 10,
+    width: '48%',
+    alignItems: 'center',
   },
 
   deleteButton: {
-    backgroundColor: '#dc3545',
-    padding: 10,
+    backgroundColor: '#FF4D4D',
+    padding: 12,
     borderRadius: 10,
-    marginTop: 15,
+    width: '48%',
     alignItems: 'center',
   },
 

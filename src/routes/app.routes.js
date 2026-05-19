@@ -7,23 +7,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthContext } from '../contexts/AuthContext';
 
 import HomeScreen from '../screens/HomeScreen';
-
 import LoginScreen from '../screens/LoginScreen';
-
 import PostDetailsScreen from '../screens/PostDetailsScreen';
-
 import CreatePostScreen from '../screens/CreatePostScreen';
-
 import EditPostScreen from '../screens/EditPostScreen';
-
 import TeachersScreen from '../screens/TeachersScreen';
-
 import StudentsScreen from '../screens/StudentsScreen';
+import CreateUserScreen from '../screens/CreateUserScreen';
+import EditUserScreen from '../screens/EditUserScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppRoutes() {
-
   const auth = useContext(AuthContext);
 
   if (!auth) {
@@ -35,7 +30,6 @@ export default function AppRoutes() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-
         {signed ? (
           <>
             <Stack.Screen
@@ -67,14 +61,26 @@ export default function AppRoutes() {
               name="Students"
               component={StudentsScreen}
             />
+
+            <Stack.Screen
+              name="CreateUser"
+              component={CreateUserScreen}
+            />
+
+            <Stack.Screen
+              name="EditUser"
+              component={EditUserScreen}
+            />
+            
           </>
         ) : (
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-          />
+          <>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+            />
+          </>
         )}
-
       </Stack.Navigator>
     </NavigationContainer>
   );

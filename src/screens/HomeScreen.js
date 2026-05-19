@@ -37,6 +37,12 @@ export default function HomeScreen({
   const { logout, user } =
     useContext(AuthContext);
 
+  const isProfessor =
+    user?.role === 'Professor';
+
+  const isAdmin =
+    user?.role === 'Admin';
+
   async function loadPosts() {
     try {
       const response =
@@ -72,7 +78,6 @@ export default function HomeScreen({
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* HEADER */}
       <View style={styles.header}>
         <View>
           <Text style={styles.welcome}>
@@ -100,12 +105,10 @@ export default function HomeScreen({
         </TouchableOpacity>
       </View>
 
-      {/* TÍTULO */}
       <Text style={styles.title}>
         Blog Mobile
       </Text>
 
-      {/* PESQUISA */}
       <View style={styles.searchContainer}>
         <MaterialIcons
           name="search"
@@ -121,76 +124,75 @@ export default function HomeScreen({
         />
       </View>
 
-      {/* BOTÕES */}
-      <View style={styles.actionsContainer}>
+      {(isProfessor || isAdmin) && (
+        <>
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() =>
+                navigation.navigate(
+                  'CreatePost'
+                )
+              }
+            >
+              <MaterialIcons
+                name="add"
+                size={24}
+                color="#fff"
+              />
 
-        {/* APENAS PROFESSOR */}
-        {user?.role === 'Professor' && (
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() =>
-              navigation.navigate(
-                'CreatePost'
-              )
-            }
-          >
-            <MaterialIcons
-              name="add"
-              size={24}
-              color="#fff"
-            />
+              <Text style={styles.actionText}>
+                Novo Post
+              </Text>
+            </TouchableOpacity>
 
-            <Text style={styles.actionText}>
-              Novo Post
-            </Text>
-          </TouchableOpacity>
-        )}
+            <TouchableOpacity
+              style={
+                styles.actionButtonSecondary
+              }
+              onPress={() =>
+                navigation.navigate(
+                  'Students'
+                )
+              }
+            >
+              <FontAwesome5
+                name="user-graduate"
+                size={18}
+                color="#fff"
+              />
 
-        <TouchableOpacity
-          style={
-            styles.actionButtonSecondary
-          }
-          onPress={() =>
-            navigation.navigate(
-              'Teachers'
-            )
-          }
-        >
-          <FontAwesome5
-            name="chalkboard-teacher"
-            size={18}
-            color="#fff"
-          />
+              <Text style={styles.actionText}>
+                Estudantes
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-          <Text style={styles.actionText}>
-            Professores
-          </Text>
-        </TouchableOpacity>
-      </View>
+          {isAdmin && (
+            <View style={styles.actionsContainer}>
+              <TouchableOpacity
+                style={styles.studentButton}
+                onPress={() =>
+                  navigation.navigate(
+                    'Teachers'
+                  )
+                }
+              >
+                <FontAwesome5
+                  name="chalkboard-teacher"
+                  size={18}
+                  color="#fff"
+                />
 
-      {/* ESTUDANTES */}
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity
-          style={styles.studentButton}
-          onPress={() =>
-            navigation.navigate(
-              'Students'
-            )
-          }
-        >
-          <FontAwesome5
-            name="user-graduate"
-            size={18}
-            color="#fff"
-          />
+                <Text style={styles.actionText}>
+                  Professores
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </>
+      )}
 
-          <Text style={styles.actionText}>
-            Estudantes
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* LISTA POSTS */}
       <FlatList
         data={filteredPosts}
         showsVerticalScrollIndicator={

@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import React, {
+  useState,
+  useContext,
+} from 'react';
 
 import {
   View,
@@ -11,31 +14,43 @@ import {
 
 import api from '../services/api';
 
+import { AuthContext } from '../contexts/AuthContext';
+
 export default function EditPostScreen({
   route,
   navigation,
 }) {
   const { post } = route.params;
 
+  const { user } = useContext(AuthContext);
+
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
 
   async function handleUpdatePost() {
     try {
-      await api.put(`/Posts/${post.id}`, {
-        title,
-        content,
-      });
+      await api.put(
+        `/Posts/${post.id}`,
+        {
+          title,
+          content,
+        },
+        {
+          headers: {
+            role: user?.role,
+          },
+        }
+      );
 
       Alert.alert(
         'Sucesso',
         'Post atualizado!'
       );
 
-      navigation.goBack();
+      navigation.navigate('Home');
 
     } catch (error) {
-      console.log(error);
+      console.log(error.response?.data);
 
       Alert.alert(
         'Erro',
@@ -46,7 +61,14 @@ export default function EditPostScreen({
 
   async function handleDeletePost() {
     try {
-      await api.delete(`/Posts/${post.id}`);
+      await api.delete(
+        `/Posts/${post.id}`,
+        {
+          headers: {
+            role: user?.role,
+          },
+        }
+      );
 
       Alert.alert(
         'Sucesso',
@@ -56,7 +78,7 @@ export default function EditPostScreen({
       navigation.navigate('Home');
 
     } catch (error) {
-      console.log(error);
+      console.log(error.response?.data);
 
       Alert.alert(
         'Erro',

@@ -6,7 +6,7 @@ import React, {
 import api from '../services/api';
 
 export const AuthContext =
-  createContext({});
+  createContext(null);
 
 export function AuthProvider({
   children,

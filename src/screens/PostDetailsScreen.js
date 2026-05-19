@@ -1,3 +1,5 @@
+import React, { useContext } from 'react';
+
 import {
   View,
   Text,
@@ -5,19 +7,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { useContext } from 'react';
-
-import { AuthContext }from '../contexts/AuthContext';
-
-const { user } = useContext(AuthContext);
-
-const { post } = route.params;
-
+import { AuthContext } from '../contexts/AuthContext';
 
 export default function PostDetailsScreen({
   route,
   navigation,
 }) {
+  const { user } = useContext(AuthContext);
+
   const { post } = route.params;
 
   return (

@@ -2,9 +2,7 @@ import React from 'react';
 
 import AppRoutes from './src/routes/app.routes';
 
-import {
-  AuthProvider,
-} from './src/contexts/AuthContext';
+import { AuthProvider } from './src/contexts/AuthContext';
 
 export default function App() {
   return (

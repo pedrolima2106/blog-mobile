@@ -5,6 +5,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { useContext } from 'react';
+
+import { AuthContext }from '../contexts/AuthContext';
+
+const { user } = useContext(AuthContext);
+
+const { post } = route.params;
+
+
 export default function PostDetailsScreen({
   route,
   navigation,
@@ -21,18 +30,20 @@ export default function PostDetailsScreen({
         {post.content}
       </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate('EditPost', {
-            post,
-          })
-        }
-      >
-        <Text style={styles.buttonText}>
-          Editar Post
-        </Text>
-      </TouchableOpacity>
+      {user?.role === 'Professor' && (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('EditPost', {
+              post,
+            })
+          }
+        >
+          <Text style={styles.buttonText}>
+            Editar Post
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

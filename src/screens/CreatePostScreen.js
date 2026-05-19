@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import {
+  useState,
+  useContext,
+} from 'react';
 
 import {
   View,
@@ -11,16 +14,40 @@ import {
 
 import api from '../services/api';
 
-export default function CreatePostScreen({ navigation }) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+import { AuthContext } from '../contexts/AuthContext';
+
+export default function CreatePostScreen({
+  navigation,
+}) {
+
+  const { user } =
+    useContext(AuthContext);
+
+  const [title, setTitle] =
+    useState('');
+
+  const [content, setContent] =
+    useState('');
 
   async function handleCreatePost() {
+
     try {
-      await api.post('/Posts', {
-        title,
-        content,
-      });
+
+      console.log(user);
+      console.log(user?.role);
+
+      await api.post(
+        '/Posts',
+        {
+          title,
+          content,
+        },
+        {
+          headers: {
+            role: user?.role,
+          },
+        }
+      );
 
       Alert.alert(
         'Sucesso',
@@ -30,7 +57,10 @@ export default function CreatePostScreen({ navigation }) {
       navigation.goBack();
 
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        error.response?.data
+      );
 
       Alert.alert(
         'Erro',
@@ -41,6 +71,7 @@ export default function CreatePostScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+
       <Text style={styles.label}>
         Título
       </Text>
@@ -57,7 +88,10 @@ export default function CreatePostScreen({ navigation }) {
       </Text>
 
       <TextInput
-        style={[styles.input, styles.textArea]}
+        style={[
+          styles.input,
+          styles.textArea,
+        ]}
         value={content}
         onChangeText={setContent}
         placeholder="Digite o conteúdo"
@@ -72,11 +106,13 @@ export default function CreatePostScreen({ navigation }) {
           Criar Post
         </Text>
       </TouchableOpacity>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     padding: 20,
@@ -118,4 +154,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+
 });

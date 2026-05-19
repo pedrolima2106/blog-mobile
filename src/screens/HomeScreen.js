@@ -1,4 +1,4 @@
-import {
+import React, {
   useEffect,
   useState,
   useContext,
@@ -24,9 +24,13 @@ import api from '../services/api';
 
 import { AuthContext } from '../contexts/AuthContext';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({
+  navigation,
+}) {
   const [posts, setPosts] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] =
+    useState('');
+
   const [refreshing, setRefreshing] =
     useState(false);
 
@@ -35,7 +39,8 @@ export default function HomeScreen({ navigation }) {
 
   async function loadPosts() {
     try {
-      const response = await api.get('/Posts');
+      const response =
+        await api.get('/Posts');
 
       setPosts(response.data);
 
@@ -56,10 +61,13 @@ export default function HomeScreen({ navigation }) {
     loadPosts();
   }, []);
 
-  const filteredPosts = posts.filter((post) =>
-    post.title
-      .toLowerCase()
-      .includes(search.toLowerCase())
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.title
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
   );
 
   return (
@@ -73,6 +81,10 @@ export default function HomeScreen({ navigation }) {
 
           <Text style={styles.userName}>
             {user?.name}
+          </Text>
+
+          <Text style={styles.role}>
+            {user?.role}
           </Text>
         </View>
 
@@ -111,27 +123,37 @@ export default function HomeScreen({ navigation }) {
 
       {/* BOTÕES */}
       <View style={styles.actionsContainer}>
+
+        {/* APENAS PROFESSOR */}
+        {user?.role === 'Professor' && (
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() =>
+              navigation.navigate(
+                'CreatePost'
+              )
+            }
+          >
+            <MaterialIcons
+              name="add"
+              size={24}
+              color="#fff"
+            />
+
+            <Text style={styles.actionText}>
+              Novo Post
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() =>
-            navigation.navigate('CreatePost')
+          style={
+            styles.actionButtonSecondary
           }
-        >
-          <MaterialIcons
-            name="add"
-            size={24}
-            color="#fff"
-          />
-
-          <Text style={styles.actionText}>
-            Novo Post
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.actionButtonSecondary}
           onPress={() =>
-            navigation.navigate('Teachers')
+            navigation.navigate(
+              'Teachers'
+            )
           }
         >
           <FontAwesome5
@@ -146,12 +168,14 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* BOTÃO ESTUDANTES */}
+      {/* ESTUDANTES */}
       <View style={styles.actionsContainer}>
         <TouchableOpacity
           style={styles.studentButton}
           onPress={() =>
-            navigation.navigate('Students')
+            navigation.navigate(
+              'Students'
+            )
           }
         >
           <FontAwesome5
@@ -169,18 +193,18 @@ export default function HomeScreen({ navigation }) {
       {/* LISTA POSTS */}
       <FlatList
         data={filteredPosts}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={
+          false
+        }
         keyExtractor={(item) =>
           item.id.toString()
         }
-
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
           />
         }
-
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
@@ -252,6 +276,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#111',
+  },
+
+  role: {
+    fontSize: 14,
+    color: '#6C63FF',
+    marginTop: 5,
+    fontWeight: 'bold',
   },
 
   logoutButton: {

@@ -1,29 +1,42 @@
-import {
+import React, {
   createContext,
   useState,
 } from 'react';
 
-export const AuthContext = createContext({});
+import api from '../services/api';
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+export const AuthContext =
+  createContext({});
 
-  async function signIn(email, password) {
-    if (
-      email === 'admin@email.com' &&
-      password === '123456'
-    ) {
-      const fakeUser = {
-        name: 'Pedro',
-        email,
-      };
+export function AuthProvider({
+  children,
+}) {
+  const [user, setUser] =
+    useState(null);
 
-      setUser(fakeUser);
+  async function signIn(
+    email,
+    password
+  ) {
+    try {
+      const response =
+        await api.post(
+          '/Auth/login',
+          {
+            email,
+            password,
+          }
+        );
+
+      setUser(response.data);
 
       return true;
-    }
 
-    return false;
+    } catch (error) {
+      console.log(error);
+
+      return false;
+    }
   }
 
   function logout() {

@@ -15,7 +15,7 @@ export default function CreateUserScreen({
   route,
   navigation,
 }) {
-  const { role } = route.params;
+  const role = route?.params?.role;
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -23,7 +23,30 @@ export default function CreateUserScreen({
     useState('');
 
   async function handleCreateUser() {
+    if (!name || !email || !password) {
+      Alert.alert(
+        'Atenção',
+        'Preencha todos os campos'
+      );
+      return;
+    }
+
+    if (!role) {
+      Alert.alert(
+        'Erro',
+        'Perfil do usuário não foi informado'
+      );
+      return;
+    }
+
     try {
+      console.log('Cadastrando:', {
+        name,
+        email,
+        password,
+        role,
+      });
+
       await api.post('/Auth/register', {
         name,
         email,
@@ -39,11 +62,16 @@ export default function CreateUserScreen({
       navigation.goBack();
 
     } catch (error) {
-      console.log(error.response?.data);
+      console.log(
+        'Erro cadastro:',
+        error.response?.status,
+        error.response?.data
+      );
 
       Alert.alert(
         'Erro',
-        'Erro ao cadastrar usuário'
+        error.response?.data ||
+          'Erro ao cadastrar usuário'
       );
     }
   }
@@ -66,6 +94,7 @@ export default function CreateUserScreen({
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
       />
 
       <TextInput

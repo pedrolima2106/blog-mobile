@@ -20,6 +20,10 @@ export default function TeachersScreen({
   const [teachers, setTeachers] =
     useState([]);
 
+  const [page, setPage] = useState(1);
+
+  const itemsPerPage = 5;
+
   async function loadTeachers() {
     try {
       const response =
@@ -34,6 +38,17 @@ export default function TeachersScreen({
 
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  function confirmDeleteTeacher(id) {
+    const confirm =
+      window.confirm(
+        'Deseja realmente excluir este professor?'
+      );
+
+    if (confirm) {
+      deleteTeacher(id);
     }
   }
 
@@ -70,6 +85,32 @@ export default function TeachersScreen({
     return unsubscribe;
   }, [navigation]);
 
+  const totalPages =
+    Math.ceil(
+      teachers.length / itemsPerPage
+    ) || 1;
+
+  const startIndex =
+    (page - 1) * itemsPerPage;
+
+  const paginatedTeachers =
+    teachers.slice(
+      startIndex,
+      startIndex + itemsPerPage
+    );
+
+  function previousPage() {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  }
+
+  function nextPage() {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -92,8 +133,12 @@ export default function TeachersScreen({
         </Text>
       </TouchableOpacity>
 
+      <Text style={styles.pageInfo}>
+        Página {page} de {totalPages}
+      </Text>
+
       <FlatList
-        data={teachers}
+        data={paginatedTeachers}
         keyExtractor={(item) =>
           item.id.toString()
         }
@@ -131,7 +176,7 @@ export default function TeachersScreen({
               <TouchableOpacity
                 style={styles.deleteButton}
                 onPress={() =>
-                  deleteTeacher(item.id)
+                  confirmDeleteTeacher(item.id)
                 }
               >
                 <Text style={styles.buttonText}>
@@ -142,6 +187,36 @@ export default function TeachersScreen({
           </View>
         )}
       />
+
+      <View style={styles.pagination}>
+        <TouchableOpacity
+          style={[
+            styles.pageButton,
+            page === 1 &&
+              styles.pageButtonDisabled,
+          ]}
+          onPress={previousPage}
+          disabled={page === 1}
+        >
+          <Text style={styles.pageButtonText}>
+            Anterior
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.pageButton,
+            page === totalPages &&
+              styles.pageButtonDisabled,
+          ]}
+          onPress={nextPage}
+          disabled={page === totalPages}
+        >
+          <Text style={styles.pageButtonText}>
+            Próxima
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -164,13 +239,20 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 14,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
 
   createButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+
+  pageInfo: {
+    textAlign: 'center',
+    color: '#555',
+    fontWeight: 'bold',
+    marginBottom: 15,
   },
 
   card: {
@@ -222,6 +304,29 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+
+  pageButton: {
+    backgroundColor: '#6C63FF',
+    padding: 14,
+    borderRadius: 12,
+    width: '48%',
+    alignItems: 'center',
+  },
+
+  pageButtonDisabled: {
+    backgroundColor: '#AAA',
+  },
+
+  pageButtonText: {
     color: '#fff',
     fontWeight: 'bold',
   },

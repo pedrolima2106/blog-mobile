@@ -15,6 +15,7 @@ import TeachersScreen from '../screens/TeachersScreen';
 import StudentsScreen from '../screens/StudentsScreen';
 import CreateUserScreen from '../screens/CreateUserScreen';
 import EditUserScreen from '../screens/EditUserScreen';
+import ManagePostsScreen from '../screens/ManagePostsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,11 @@ export default function AppRoutes() {
             />
 
             <Stack.Screen
+              name="ManagePosts"
+              component={ManagePostsScreen}
+            />
+
+            <Stack.Screen
               name="Teachers"
               component={TeachersScreen}
             />
@@ -71,7 +77,6 @@ export default function AppRoutes() {
               name="EditUser"
               component={EditUserScreen}
             />
-            
           </>
         ) : (
           <>

@@ -160,6 +160,27 @@ export default function HomeScreen({
               }
               onPress={() =>
                 navigation.navigate(
+                  'ManagePosts'
+                )
+              }
+            >
+              <MaterialIcons
+                name="settings"
+                size={22}
+                color="#fff"
+              />
+
+              <Text style={styles.actionText}>
+                Gerenciar Posts
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              style={styles.studentHalfButton}
+              onPress={() =>
+                navigation.navigate(
                   'Students'
                 )
               }
@@ -174,12 +195,10 @@ export default function HomeScreen({
                 Estudantes
               </Text>
             </TouchableOpacity>
-          </View>
 
-          {isAdmin && (
-            <View style={styles.actionsContainer}>
+            {isAdmin && (
               <TouchableOpacity
-                style={styles.studentButton}
+                style={styles.teacherHalfButton}
                 onPress={() =>
                   navigation.navigate(
                     'Teachers'
@@ -196,8 +215,8 @@ export default function HomeScreen({
                   Professores
                 </Text>
               </TouchableOpacity>
-            </View>
-          )}
+            )}
+          </View>
         </>
       )}
 
@@ -235,6 +254,10 @@ export default function HomeScreen({
 
             <Text style={styles.postTitle}>
               {item.title}
+            </Text>
+
+            <Text style={styles.postAuthor}>
+              Autor: {item.author}
             </Text>
 
             <Text
@@ -354,14 +377,24 @@ const styles = StyleSheet.create({
     width: '48%',
   },
 
-  studentButton: {
+  studentHalfButton: {
     backgroundColor: '#FF8C42',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
     borderRadius: 16,
-    width: '100%',
+    width: '48%',
+  },
+
+  teacherHalfButton: {
+    backgroundColor: '#00B894',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    borderRadius: 16,
+    width: '48%',
   },
 
   actionText: {
@@ -398,8 +431,15 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#111',
-    marginBottom: 12,
+    marginBottom: 8,
     textTransform: 'capitalize',
+  },
+
+  postAuthor: {
+    color: '#6C63FF',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 
   postBody: {

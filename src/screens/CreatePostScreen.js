@@ -1,4 +1,4 @@
-import {
+import React, {
   useState,
   useContext,
 } from 'react';
@@ -19,7 +19,6 @@ import { AuthContext } from '../contexts/AuthContext';
 export default function CreatePostScreen({
   navigation,
 }) {
-
   const { user } =
     useContext(AuthContext);
 
@@ -30,21 +29,18 @@ export default function CreatePostScreen({
     useState('');
 
   async function handleCreatePost() {
-
     try {
-
-      console.log(user);
-      console.log(user?.role);
-
       await api.post(
         '/Posts',
         {
           title,
           content,
+          author: user?.name,
         },
         {
           headers: {
             role: user?.role,
+            author: user?.name,
           },
         }
       );
@@ -54,11 +50,12 @@ export default function CreatePostScreen({
         'Post criado com sucesso!'
       );
 
-      navigation.goBack();
+      navigation.navigate('Home');
 
     } catch (error) {
-
       console.log(
+        'Erro create post:',
+        error.response?.status,
         error.response?.data
       );
 

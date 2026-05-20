@@ -31,27 +31,22 @@ export default function EditPostScreen({
   const [content, setContent] =
     useState(post.content);
 
+  const [author, setAuthor] =
+    useState(post.author || user?.name);
+
   async function handleUpdatePost() {
     try {
-      console.log(
-        'Usuário logado:',
-        user
-      );
-
-      console.log(
-        'Role enviada:',
-        user?.role
-      );
-
       await api.put(
         `/Posts/${post.id}`,
         {
           title,
           content,
+          author,
         },
         {
           headers: {
             role: user?.role,
+            author,
           },
         }
       );
@@ -66,10 +61,7 @@ export default function EditPostScreen({
     } catch (error) {
       console.log(
         'Erro update:',
-        error.response?.status
-      );
-
-      console.log(
+        error.response?.status,
         error.response?.data
       );
 
@@ -80,18 +72,26 @@ export default function EditPostScreen({
     }
   }
 
+  function confirmDeletePost() {
+    Alert.alert(
+      'Confirmar exclusão',
+      'Deseja realmente excluir este post?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          style: 'destructive',
+          onPress: handleDeletePost,
+        },
+      ]
+    );
+  }
+
   async function handleDeletePost() {
     try {
-      console.log(
-        'Usuário logado:',
-        user
-      );
-
-      console.log(
-        'Role enviada:',
-        user?.role
-      );
-
       await api.delete(
         `/Posts/${post.id}`,
         {
@@ -111,10 +111,7 @@ export default function EditPostScreen({
     } catch (error) {
       console.log(
         'Erro delete:',
-        error.response?.status
-      );
-
-      console.log(
+        error.response?.status,
         error.response?.data
       );
 
@@ -143,6 +140,17 @@ export default function EditPostScreen({
       />
 
       <Text style={styles.label}>
+        Autor
+      </Text>
+
+      <TextInput
+        style={styles.input}
+        value={author}
+        onChangeText={setAuthor}
+        placeholder="Digite o autor"
+      />
+
+      <Text style={styles.label}>
         Conteúdo
       </Text>
 
@@ -168,7 +176,7 @@ export default function EditPostScreen({
 
       <TouchableOpacity
         style={styles.deleteButton}
-        onPress={handleDeletePost}
+        onPress={confirmDeletePost}
       >
         <Text style={styles.buttonText}>
           Excluir Post

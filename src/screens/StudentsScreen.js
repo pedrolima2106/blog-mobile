@@ -59,14 +59,38 @@ export default function StudentsScreen({
   }
 
   useEffect(() => {
-    loadStudents();
-  }, []);
+    const unsubscribe =
+      navigation.addListener(
+        'focus',
+        () => {
+          loadStudents();
+        }
+      );
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
         Alunos
       </Text>
+
+      <TouchableOpacity
+        style={styles.createButton}
+        onPress={() =>
+          navigation.navigate(
+            'CreateUser',
+            {
+              role: 'Aluno',
+            }
+          )
+        }
+      >
+        <Text style={styles.createButtonText}>
+          + Novo Aluno
+        </Text>
+      </TouchableOpacity>
 
       <FlatList
         data={students}
@@ -133,6 +157,20 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+
+  createButton: {
+    backgroundColor: '#00B894',
+    padding: 15,
+    borderRadius: 14,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+
+  createButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 
   card: {

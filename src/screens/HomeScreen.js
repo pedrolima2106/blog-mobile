@@ -64,8 +64,16 @@ export default function HomeScreen({
   }
 
   useEffect(() => {
-    loadPosts();
-  }, []);
+    const unsubscribe =
+      navigation.addListener(
+        'focus',
+        () => {
+          loadPosts();
+        }
+      );
+
+    return unsubscribe;
+  }, [navigation]);
 
   const filteredPosts = posts.filter(
     (post) =>

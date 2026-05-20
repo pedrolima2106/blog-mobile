@@ -59,14 +59,38 @@ export default function TeachersScreen({
   }
 
   useEffect(() => {
-    loadTeachers();
-  }, []);
+    const unsubscribe =
+      navigation.addListener(
+        'focus',
+        () => {
+          loadTeachers();
+        }
+      );
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
         Professores
       </Text>
+
+      <TouchableOpacity
+        style={styles.createButton}
+        onPress={() =>
+          navigation.navigate(
+            'CreateUser',
+            {
+              role: 'Professor',
+            }
+          )
+        }
+      >
+        <Text style={styles.createButtonText}>
+          + Novo Professor
+        </Text>
+      </TouchableOpacity>
 
       <FlatList
         data={teachers}
@@ -133,6 +157,20 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+
+  createButton: {
+    backgroundColor: '#00B894',
+    padding: 15,
+    borderRadius: 14,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+
+  createButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 
   card: {
